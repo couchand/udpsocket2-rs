@@ -5,14 +5,14 @@
 //! ```no_run
 //! # extern crate futures;
 //! # extern crate udpsocket2;
-//! # 
+//! #
 //! # use udpsocket2::UdpSocket;
-//! # 
+//! #
 //! # fn main() -> std::io::Result<()> {
-//! # 
+//! #
 //! #     use futures::{Future, Stream};
 //! #     use futures::future::ok;
-//! # 
+//! #
 //! let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
 //! #
 //! #     tokio::run(ok(()).and_then(move |_| {
@@ -29,9 +29,9 @@
 //! );
 //! #
 //! #         Ok(())
-//! # 
+//! #
 //! #     }));
-//! # 
+//! #
 //! #     Ok(())
 //! # }
 //! ```
@@ -74,14 +74,14 @@ pub struct UdpDatagram {
 /// ```no_run
 /// # extern crate futures;
 /// # extern crate udpsocket2;
-/// # 
+/// #
 /// # use udpsocket2::UdpSocket;
-/// # 
+/// #
 /// # fn main() -> std::io::Result<()> {
-/// # 
+/// #
 /// #     use futures::{Future, Stream};
 /// #     use futures::future::ok;
-/// # 
+/// #
 /// let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
 /// #
 /// #     tokio::run(ok(()).and_then(move |_| {
@@ -98,9 +98,9 @@ pub struct UdpDatagram {
 /// );
 /// #
 /// #         Ok(())
-/// # 
+/// #
 /// #     }));
-/// # 
+/// #
 /// #     Ok(())
 /// # }
 /// ```
@@ -124,9 +124,9 @@ impl UdpSocket {
     /// ```no_run
     /// # extern crate udpsocket2;
     /// # use udpsocket2::UdpSocket;
-    /// # 
+    /// #
     /// # fn main() -> std::io::Result<()> {
-    /// # 
+    /// #
     /// let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     Ok(())
@@ -143,18 +143,18 @@ impl UdpSocket {
     /// ```no_run
     /// # extern crate futures;
     /// # extern crate udpsocket2;
-    /// # 
+    /// #
     /// # use udpsocket2::UdpSocket;
-    /// # 
+    /// #
     /// # fn main() -> std::io::Result<()> {
-    /// # 
+    /// #
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
-    /// # 
+    /// #
     /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
-    /// # 
+    /// #
     /// tokio::spawn(
     ///     socket.incoming()
     ///         .for_each(|datagram| { println!("{:?}", datagram); Ok(()) })
@@ -162,9 +162,9 @@ impl UdpSocket {
     /// );
     /// #
     /// #         Ok(())
-    /// # 
+    /// #
     /// #     }));
-    /// # 
+    /// #
     /// #     Ok(())
     /// # }
     /// ```
@@ -184,14 +184,14 @@ impl UdpSocket {
     /// ```no_run
     /// # extern crate futures;
     /// # extern crate udpsocket2;
-    /// # 
+    /// #
     /// # use udpsocket2::UdpSocket;
-    /// # 
+    /// #
     /// # fn main() -> std::io::Result<()> {
-    /// # 
+    /// #
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
-    /// # 
+    /// #
     /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
@@ -202,9 +202,9 @@ impl UdpSocket {
     /// );
     /// #
     /// #         Ok(())
-    /// # 
+    /// #
     /// #     }));
-    /// # 
+    /// #
     /// #     Ok(())
     /// # }
     /// ```
@@ -222,14 +222,14 @@ impl UdpSocket {
     /// ```no_run
     /// # extern crate futures;
     /// # extern crate udpsocket2;
-    /// # 
+    /// #
     /// # use udpsocket2::UdpSocket;
-    /// # 
+    /// #
     /// # fn main() -> std::io::Result<()> {
-    /// # 
+    /// #
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
-    /// # 
+    /// #
     /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
@@ -245,9 +245,9 @@ impl UdpSocket {
     /// );
     /// #
     /// #         Ok(())
-    /// # 
+    /// #
     /// #     }));
-    /// # 
+    /// #
     /// #     Ok(())
     /// # }
     /// ```
