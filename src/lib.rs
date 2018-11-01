@@ -66,7 +66,7 @@ use send_to::{Send, SendTo};
 
 /// An individual UDP datagram, either having been received or to be sent over
 /// a UDP socket.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UdpDatagram {
     /// The peer for this datagram: if it was received, the source, if it is
     /// to be sent, the destination.
@@ -123,7 +123,7 @@ pub struct UdpDatagram {
 /// #     Ok(())
 /// # }
 /// ```
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct UdpSocket {
     socket: Arc<Mutex<TokioUdpSocket>>,
 }
