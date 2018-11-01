@@ -1,5 +1,14 @@
 //! A more ergonomic Tokio-enabled UDP socket.
 //!
+//! In particular, attention is paid to the fact that a UDP socket can both
+//! send and receive datagrams, and that a practical consumer would like to be
+//! able to do both of these things, interleaved on the same socket, with
+//! non-blocking I/O.
+//!
+//! See the [`UdpSocket`] struct documentation for more details.
+//!
+//! [`UdpSocket`]: struct.UdpSocket.html
+//!
 //! # Examples
 //!
 //! ```no_run
@@ -59,15 +68,25 @@ use send_to::{Send, SendTo};
 /// a UDP socket.
 #[derive(Debug)]
 pub struct UdpDatagram {
+    /// The peer for this datagram: if it was received, the source, if it is
+    /// to be sent, the destination.
     pub peer: SocketAddr,
+    /// The data content of the datagram.
     pub data: Vec<u8>,
 }
 
 /// A UDP socket, using non-blocking I/O.
 ///
-/// Intended to be used within a Tokio runtime, this offers a few advantages
-/// over the standard tokio::net::UdpSocket, for instance, a more ergonomic
-/// interface.
+/// Intended to be used within a Tokio runtime, this offers a more ergonomic
+/// interface compared to the standard tokio::net::UdpSocket.
+///
+/// Bind to a socket with the [`bind`] method.  Receive datagrams as a
+/// [`Stream`] with [`incoming`], and send datagrams with [`send_to`].
+///
+/// [`bind`]: #method.bind
+/// [`Stream`]: ../futures/stream/trait.Stream.html
+/// [`incoming`]: #method.incoming
+/// [`send_to`]: #method.send_to
 ///
 /// # Examples
 ///
@@ -116,8 +135,12 @@ impl UdpSocket {
 
     /// Creates a UDP socket from the given address.
     ///
-    /// The address parameter is treated the same as `std::net::UdpSocket::bind`,
-    /// see the documentation there for precise details.
+    /// The address parameter, which must implement [`ToSocketAddrs`], is
+    /// treated the same as for [`std::net::UdpSocket::bind`].  See the
+    /// documentation there for details.
+    ///
+    /// [`ToSocketAddrs`]: https://doc.rust-lang.org/std/net/trait.ToSocketAddrs.html
+    /// [`std::net::UdpSocket::bind`]: https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.bind
     ///
     /// # Examples
     ///
@@ -136,7 +159,10 @@ impl UdpSocket {
         each_addr(addrs, TokioUdpSocket::bind).map(UdpSocket::new)
     }
 
-    /// Returns a stream of datagrams received on this socket.
+    /// Returns a stream of datagrams (as [`UdpDatagram`] structs) received on
+    /// this socket.
+    ///
+    /// [`UdpDatagram`]: struct.UdpDatagram.html
     ///
     /// # Examples
     ///
@@ -177,7 +203,9 @@ impl UdpSocket {
     ///
     /// Though `addr` might resolve to multiple socket addresses, this will
     /// only attempt to send to the first resolved address, to be consistent
-    /// with `std::net::UdpSocket::send_to`.
+    /// with [`std::net::UdpSocket::send_to`].
+    ///
+    /// [`std::net::UdpSocket::send_to`]: https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.send_to
     ///
     /// # Examples
     ///
