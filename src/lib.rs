@@ -33,13 +33,13 @@
 //! );
 //!
 //! tokio::spawn(
-//!     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")
+//!     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")?
 //!         .map_err(|_| ())
 //! );
 //! #
 //! #         Ok(())
 //! #
-//! #     }));
+//! #     }).map_err(|_: std::io::Error| ()));
 //! #
 //! #     Ok(())
 //! # }
@@ -112,13 +112,13 @@ pub struct UdpDatagram {
 /// );
 ///
 /// tokio::spawn(
-///     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")
+///     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")?
 ///         .map_err(|_| ())
 /// );
 /// #
 /// #         Ok(())
 /// #
-/// #     }));
+/// #     }).map_err(|_: std::io::Error| ()));
 /// #
 /// #     Ok(())
 /// # }
@@ -225,21 +225,31 @@ impl UdpSocket {
     /// #     tokio::run(ok(()).and_then(move |_| {
     /// #
     /// tokio::spawn(
-    ///     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")
+    ///     socket.send_to(&[0xde, 0xad, 0xbe, 0xef], "127.0.0.1:34254")?
     ///         .map_err(|_| ())
     /// );
     /// #
     /// #         Ok(())
     /// #
-    /// #     }));
+    /// #     }).map_err(|_: std::io::Error| ()));
     /// #
     /// #     Ok(())
     /// # }
     /// ```
-    pub fn send_to<'a, Addr: ToSocketAddrs>(&self, buffer: &'a [u8], addr: Addr) -> SendTo<'a> {
-        // TODO: not unwrap!
-        let addr = addr.to_socket_addrs().unwrap().nth(0).unwrap();
-        SendTo::new(self.socket.clone(), buffer, addr)
+    pub fn send_to<'a, Addr: ToSocketAddrs>(
+        &self, buffer: &'a [u8], addr: Addr
+    ) ->
+        Result<SendTo<'a>, io::Error>
+    {
+        let addr = match addr.to_socket_addrs()?.next() {
+            Some(addr) => addr,
+            None => return Err(
+                io::Error::new(io::ErrorKind::InvalidInput,
+                     "no addresses to send data to")
+            ),
+        };
+
+        Ok(SendTo::new(self.socket.clone(), buffer, addr))
     }
 
     /// Sends a datagram to the given address via the socket.  Returns a future

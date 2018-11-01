@@ -33,6 +33,7 @@ fn test_listener() {
 
     let socket2 = UdpSocket::bind("localhost:9998").unwrap();
     socket2.send_to(&[42], "localhost:9999")
+        .expect("error sending udp datagram!")
         .map_err(|e| eprintln!("udp send err: {:?}", e))
         .and_then(|_| {
             let socket3 = UdpSocket::bind("localhost:9997").unwrap();
