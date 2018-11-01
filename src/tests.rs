@@ -31,7 +31,7 @@ fn test_listener() {
     })
         .and_then(|_| {
 
-    let mut socket2 = UdpSocket::bind("localhost:9998").unwrap();
+    let socket2 = UdpSocket::bind("localhost:9998").unwrap();
     socket2.send_to(&[42], "localhost:9999")
         .map_err(|e| eprintln!("udp send err: {:?}", e))
         .and_then(|_| {

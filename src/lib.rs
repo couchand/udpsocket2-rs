@@ -13,7 +13,7 @@
 //! #     use futures::{Future, Stream};
 //! #     use futures::future::ok;
 //! #
-//! let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+//! let socket = UdpSocket::bind("127.0.0.1:34254")?;
 //! #
 //! #     tokio::run(ok(()).and_then(move |_| {
 //!
@@ -82,7 +82,7 @@ pub struct UdpDatagram {
 /// #     use futures::{Future, Stream};
 /// #     use futures::future::ok;
 /// #
-/// let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+/// let socket = UdpSocket::bind("127.0.0.1:34254")?;
 /// #
 /// #     tokio::run(ok(()).and_then(move |_| {
 ///
@@ -127,7 +127,7 @@ impl UdpSocket {
     /// #
     /// # fn main() -> std::io::Result<()> {
     /// #
-    /// let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+    /// let socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     Ok(())
     /// # }
@@ -151,7 +151,7 @@ impl UdpSocket {
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
     /// #
-    /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+    /// #     let socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
     /// #
@@ -192,7 +192,7 @@ impl UdpSocket {
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
     /// #
-    /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+    /// #     let socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
     /// #
@@ -208,7 +208,7 @@ impl UdpSocket {
     /// #     Ok(())
     /// # }
     /// ```
-    pub fn send_to<'a, Addr: ToSocketAddrs>(&mut self, buffer: &'a [u8], addr: Addr) -> SendTo<'a> {
+    pub fn send_to<'a, Addr: ToSocketAddrs>(&self, buffer: &'a [u8], addr: Addr) -> SendTo<'a> {
         // TODO: not unwrap!
         let addr = addr.to_socket_addrs().unwrap().nth(0).unwrap();
         SendTo::new(self.socket.clone(), buffer, addr)
@@ -230,7 +230,7 @@ impl UdpSocket {
     /// #     use futures::{Future, Stream};
     /// #     use futures::future::ok;
     /// #
-    /// #     let mut socket = UdpSocket::bind("127.0.0.1:34254")?;
+    /// #     let socket = UdpSocket::bind("127.0.0.1:34254")?;
     /// #
     /// #     tokio::run(ok(()).and_then(move |_| {
     /// #
