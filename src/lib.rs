@@ -139,6 +139,8 @@ impl UdpSocket {
     /// treated the same as for [`std::net::UdpSocket::bind`].  See the
     /// documentation there for details.
     ///
+    /// Returns an `Err` in the case that address parsing fails.
+    ///
     /// [`ToSocketAddrs`]: https://doc.rust-lang.org/std/net/trait.ToSocketAddrs.html
     /// [`std::net::UdpSocket::bind`]: https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.bind
     ///
@@ -159,8 +161,10 @@ impl UdpSocket {
         each_addr(addrs, TokioUdpSocket::bind).map(UdpSocket::new)
     }
 
-    /// Returns a stream of datagrams (as [`UdpDatagram`] structs) received on
-    /// this socket.
+    /// Returns a stream of datagrams received on this socket.
+    ///
+    /// Each datagram in the stream is a [`UdpDatagram`] struct with the body
+    /// of the datagram and the peer address it was received from.
     ///
     /// [`UdpDatagram`]: struct.UdpDatagram.html
     ///
@@ -198,12 +202,19 @@ impl UdpSocket {
         Incoming::new(self.socket.clone())
     }
 
-    /// Sends data to the given address via the socket.  Returns a future which
-    /// resolves when the datagram has been written.
+    /// Sends data to the given address via the socket.
+    ///
+    /// If the address text parses correctly, returns `Ok` of a future which
+    /// resolves when the datagram has been written.  Returns `Err` if an
+    /// address can't be parsed.
     ///
     /// Though `addr` might resolve to multiple socket addresses, this will
     /// only attempt to send to the first resolved address, to be consistent
     /// with [`std::net::UdpSocket::send_to`].
+    ///
+    /// If you'll be sending more than one datagram, it's better to use [`send`].
+    ///
+    /// [`send`]: #method.send
     ///
     /// [`std::net::UdpSocket::send_to`]: https://doc.rust-lang.org/std/net/struct.UdpSocket.html#method.send_to
     ///
@@ -245,15 +256,20 @@ impl UdpSocket {
             Some(addr) => addr,
             None => return Err(
                 io::Error::new(io::ErrorKind::InvalidInput,
-                     "no addresses to send data to")
+                    "could not resolve to any addresses")
             ),
         };
 
         Ok(SendTo::new(self.socket.clone(), buffer, addr))
     }
 
-    /// Sends a datagram to the given address via the socket.  Returns a future
-    /// which resolves when the datagram has been written.
+    /// Sends a datagram to the given address via the socket.
+    ///
+    /// Returns a future which resolves when the datagram has been written.
+    /// Use this method instead of [`send_to`] to repeatedly send to a
+    /// peer without the address parsing overhead or risk of errors.
+    ///
+    /// [`send_to`]: #method.send_to
     ///
     /// # Examples
     ///
