@@ -1,8 +1,8 @@
 [package]
 name = "udpsocket2"
 version = "0.1.0"
-authors = ["Andrew Couch <andrew@cockroachlabs.com>"]
+authors = ["Andrew Dona-Couch <udpsocket2@andrewcou.ch>"]
 
 [dependencies]
-futures = "0.1.15"
-tokio = "0.1.11"
+futures = "0.1"
+tokio = "0.1"
