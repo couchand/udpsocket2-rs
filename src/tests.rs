@@ -52,10 +52,12 @@ fn test_listener() {
             assert_eq!(res.len(), 2);
 
             let actual = &res[0];
+            assert_eq!(actual.peer.port(), 9998);
             assert_eq!(actual.data.len(), 1);
             assert_eq!(actual.data[0], 42);
 
             let actual = &res[1];
+            assert_eq!(actual.peer.port(), 9997);
             assert_eq!(actual.data.len(), 4);
             assert_eq!(actual.data[0], 0);
             assert_eq!(actual.data[1], 1);
