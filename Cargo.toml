@@ -1,7 +1,12 @@
 [package]
 name = "udpsocket2"
-version = "0.1.0"
+version = "0.0.1"
 authors = ["Andrew Dona-Couch <udpsocket2@andrewcou.ch>"]
+description = "A more ergonomic Tokio-enabled UDP socket."
+repository = "https://github.com/couchand/udpsocket2-rs/"
+keywords = ["udp", "tokio"]
+categories = ["asynchronous", "network-programming"]
+license = "MIT"
 
 [dependencies]
 futures = "0.1"
